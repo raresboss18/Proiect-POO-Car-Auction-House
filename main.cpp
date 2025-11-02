@@ -385,10 +385,9 @@ public:
 
 DataOra obtineOraCurenta() {
     auto now = chrono::system_clock::now();
-    time_t now_time = std::chrono::system_clock::to_time_t(now);
+    time_t now_time = chrono::system_clock::to_time_t(now);
 
-    tm local_tm;
-    localtime_s(&local_tm, &now_time);
+    tm local_tm = *localtime(&now_time); 
 
     return DataOra(
         local_tm.tm_year + 1900,
@@ -632,25 +631,24 @@ public:
 Vehicul creeazaVehiculTemporar() {
     SpecificatiiTehnice specs(1598, 115, BENZINA, MANUALA, FATA);
     DataOra data(2025, 3, 15, 10, 0);
-    // Cream un obiect local, temporar
     Vehicul v_temp("VIN_TEMP_123", "VW", "Golf 5", 2008, 210000, 4000, specs, data, "Uzura normala conform varstei");
     return v_temp;
 }
 
 int main() {
 
-    //  1. CONFIGURAREA SISTEMULUI 
+    // --- 1. CONFIGURAREA SISTEMULUI ---
     cout << "====================================================\n";
     cout << "## Initializare Sistem de Licitatii ##\n";
     cout << "====================================================\n";
-    AuctionManager manager("AuctionHouse SRL");
+    AuctionManager manager("Parc Auto Licitatii SRL");
 
     // Adaugam participanti in sistem
     manager.inregistrareParticipant(Participant(101, "Ana Popescu", "ana.p@email.com", 20000.0));
     manager.inregistrareParticipant(Participant(102, "Mihai Ionescu", "mihai.i@email.com", 35000.0));
 
-    // Adaugam vehicule in inventar 
-    manager.adaugaVehiculInParc(creeazaVehiculTemporar()); // Adaugam un Golf 5
+    // Adaugam vehicule in inventar folosind functia ajutatoare si move semantics
+    manager.adaugaVehiculInParc(creeazaVehiculTemporar()); // Adaugam un VW Golf 5
 
     SpecificatiiTehnice specsAudi(1968, 190, DIESEL, AUTOMATA, INTEGRALA);
     DataOra dataListare(2025, 10, 29, 22, 0);
@@ -658,12 +656,12 @@ int main() {
 
     manager.afiseazaInventar();
 
-    //  2. CREAREA UNEI LICITATII 
+    // --- 2. CREAREA UNEI LICITATII ---
     cout << "\n====================================================\n";
     cout << "## Creare si Desfasurare Licitatie ##\n";
     cout << "====================================================\n";
 
-    DataOra startLicitatie = obtineOraCurenta(); 
+    DataOra startLicitatie = obtineOraCurenta(); // Licitatia incepe ACUM
     manager.creeazaLicitatie("VIN_TEMP_123", startLicitatie, 1, "Licitatie rapida pentru VW Golf 5");
 
     // --- 3. INTERACTIUNEA PARTICIPANTILOR ---
@@ -688,7 +686,7 @@ int main() {
         cout << *licitatieActiva;
     }
 
-    //  4. FINALIZAREA LICITATIEI 
+    // --- 4. FINALIZAREA LICITATIEI ---
     cout << "\n====================================================\n";
     cout << "## Finalizare Licitatie ##\n";
     cout << "====================================================\n";
