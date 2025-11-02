@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <cstring>
+#include <utility>
 #include <vector>
 #include <chrono>
 #include <ctime>
@@ -124,8 +125,8 @@ private:
 
 public:
 
-    Participant(int idParticipant, const string& numeParticipant, const  string& email, double soldCurent) :
-    idParticipant(idParticipant), numeParticipant(numeParticipant), email(email), soldCurent(soldCurent),capacitateIstoric(10),numarIstoric(1){
+    Participant(int idParticipant, string  numeParticipant, string  email, double soldCurent) :
+    idParticipant(idParticipant), numeParticipant(std::move(numeParticipant)), email(std::move(email)), soldCurent(soldCurent),capacitateIstoric(10),numarIstoric(1){
 
         istoricSolduri = new double[capacitateIstoric];
         istoricSolduri[0] = soldCurent;
@@ -285,8 +286,8 @@ private:
 
 public:
 
-    Vehicul(const string& vin, const string& marca, const string& model, int anFabricatie, int kilometraj, int pretInitial, const SpecificatiiTehnice& specificatiiTehnice, const DataOra& dataOra, const string& observatiiTehnice) :
-    vin(vin), marca(marca), model(model), anFabricatie(anFabricatie), kilometraj(kilometraj), pretInitial(pretInitial), specificatiiTehnice(specificatiiTehnice), dataOra(dataOra) {
+    Vehicul(string  vin, string  marca, string  model, int anFabricatie, int kilometraj, int pretInitial, const SpecificatiiTehnice& specificatiiTehnice, const DataOra& dataOra, const string& observatiiTehnice) :
+    vin(std::move(vin)), marca(std::move(marca)), model(std::move(model)), anFabricatie(anFabricatie), kilometraj(kilometraj), pretInitial(pretInitial), specificatiiTehnice(specificatiiTehnice), dataOra(dataOra) {
         this->observatiiTehnice= new char[observatiiTehnice.length()+1];
         strcpy(this->observatiiTehnice, observatiiTehnice.c_str());
     }
@@ -297,7 +298,7 @@ public:
     }
 
     Vehicul(Vehicul&& other) noexcept :
-    vin(std::move(other.vin)), marca(std::move(other.marca)), model(std::move(other.model)), anFabricatie(other.anFabricatie), kilometraj(other.kilometraj), pretInitial(other.pretInitial), specificatiiTehnice(std::move(other.specificatiiTehnice)), dataOra(std::move(other.dataOra)) {
+    vin(std::move(other.vin)), marca(std::move(other.marca)), model(std::move(other.model)), anFabricatie(other.anFabricatie), kilometraj(other.kilometraj), pretInitial(other.pretInitial), specificatiiTehnice(other.specificatiiTehnice), dataOra(other.dataOra) {
         this->observatiiTehnice=other.observatiiTehnice;
         other.observatiiTehnice = nullptr;
     }
@@ -307,8 +308,8 @@ public:
             this->vin=std::move(other.vin);
             this->marca=std::move(other.marca);
             this->model=std::move(other.model);
-            this->dataOra=std::move(other.dataOra);
-            this->specificatiiTehnice=std::move(other.specificatiiTehnice);
+            this->dataOra=other.dataOra;
+            this->specificatiiTehnice=other.specificatiiTehnice;
 
             this->anFabricatie=other.anFabricatie;
             this->kilometraj=other.kilometraj;
@@ -387,7 +388,7 @@ DataOra obtineOraCurenta() {
     auto now = chrono::system_clock::now();
     time_t now_time = chrono::system_clock::to_time_t(now);
 
-    tm local_tm = *localtime(&now_time); 
+    tm local_tm = *localtime(&now_time);
 
     return DataOra(
         local_tm.tm_year + 1900,
@@ -412,8 +413,8 @@ private:
     char* descriereEveniment;
 
 public:
-    Licitatie(int idLicitatie, const Vehicul& vehiculVanzare, const DataOra& dataStart, int durataMinute , const string& descriereEveniment) :
-    idLicitatie(idLicitatie), vehiculVanzare(vehiculVanzare), dataStart(dataStart), durataMinute(durataMinute),pretCurent(0.0), castigatorCurent(nullptr) {
+    Licitatie(int idLicitatie, Vehicul  vehiculVanzare, const DataOra& dataStart, int durataMinute , const string& descriereEveniment) :
+    idLicitatie(idLicitatie), vehiculVanzare(std::move(vehiculVanzare)), dataStart(dataStart), durataMinute(durataMinute),pretCurent(0.0), castigatorCurent(nullptr) {
 
         this->pretCurent = this->vehiculVanzare.calculPretRezerva();
         this->descriereEveniment = new char[descriereEveniment.length() + 1];
@@ -451,23 +452,23 @@ public:
    }
 
 */
-    Licitatie(Licitatie&& other) :
-    idLicitatie(other.idLicitatie), vehiculVanzare(move(other.vehiculVanzare)),dataStart(move(other.dataStart)), durataMinute(other.durataMinute),
-    pretCurent(other.pretCurent), castigatorCurent(other.castigatorCurent), participants(move(other.participants)), dataEnd(move(other.dataEnd)) {
+    Licitatie(Licitatie&& other)  noexcept :
+    idLicitatie(other.idLicitatie), vehiculVanzare(std::move(other.vehiculVanzare)),dataStart(other.dataStart), dataEnd(other.dataEnd),
+    durataMinute(other.durataMinute), pretCurent(other.pretCurent), castigatorCurent(other.castigatorCurent), participants(std::move(other.participants)) {
         this->descriereEveniment = other.descriereEveniment;
         other.descriereEveniment = nullptr;
     }
 
-    Licitatie& operator=(Licitatie&& other) {
+    Licitatie& operator=(Licitatie&& other)  noexcept {
         if (this != &other) {
             delete[] this->descriereEveniment;
-            this->vehiculVanzare = move(other.vehiculVanzare);
-            this->dataStart = move(other.dataStart);
+            this->vehiculVanzare = std::move(other.vehiculVanzare);
+            this->dataStart = other.dataStart;
             this->durataMinute = other.durataMinute;
-            this->dataEnd = move(other.dataEnd);
+            this->dataEnd = other.dataEnd;
             this->pretCurent = other.pretCurent;
             this->castigatorCurent = other.castigatorCurent;
-            this->participants = move(other.participants);
+            this->participants = std::move(other.participants);
             this->descriereEveniment = other.descriereEveniment;
             other.descriereEveniment = nullptr;
         }
@@ -531,7 +532,7 @@ public:
         return idLicitatie;
     }
 
-    void finalizeazaLicitatie() {
+    void finalizeazaLicitatie() const {
         cout << "Final licitatie ID: " << this->idLicitatie << "\n";
 
         if (obtineOraCurenta() > this->dataEnd) {
@@ -565,7 +566,7 @@ private:
 
 public:
 
-    explicit AuctionManager(const string& numeCasaLicitatii) : numeCasaLicitatii(numeCasaLicitatii), nextLicitatieId(1) {}
+    explicit AuctionManager(string  numeCasaLicitatii) : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {}
 
     void inregistrareParticipant(const Participant& p) {
         listaParticipanti.push_back(p);
@@ -631,6 +632,7 @@ public:
 Vehicul creeazaVehiculTemporar() {
     SpecificatiiTehnice specs(1598, 115, BENZINA, MANUALA, FATA);
     DataOra data(2025, 3, 15, 10, 0);
+    // Cream un obiect local, temporar
     Vehicul v_temp("VIN_TEMP_123", "VW", "Golf 5", 2008, 210000, 4000, specs, data, "Uzura normala conform varstei");
     return v_temp;
 }
