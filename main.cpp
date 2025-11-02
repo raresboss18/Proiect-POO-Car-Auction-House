@@ -664,7 +664,9 @@ int main() {
     manager.inregistrareParticipant(Participant(105, "Elena Dragomir", "elena.d@cti.ro", 5000.0));
 
     cout << "\n--> Testare eroare: Cautare ID inexistent (999)...\n";
-    Participant* pFake = manager.getParticipantById(999);
+
+    const Participant* pFake = manager.getParticipantById(999);
+
     if (pFake == nullptr) {
         cout << "SUCCES: Participantul cu ID 999 nu a fost gasit.\n";
     } else {
@@ -798,7 +800,6 @@ int main() {
     cout << "\n-> Mutare Vehicul (Test Vehicul::Vehicul(Vehicul&&)):\n";
     Vehicul vehMutat = std::move(vehTemp);
     cout << "Obiect mutat:\n" << vehMutat << "\n";
-    // cout << vehTemp << "\n"; // Ar trebui sa fie intr-o stare goala/valida
 
     cout << "\n-> Copiere Licitatie (Test Licitatie::Licitatie(const Licitatie&)):\n";
     if (licTesla) {
@@ -810,8 +811,9 @@ int main() {
         cout << "Se plaseaza o oferta pe COPIE (nu ar trebui sa afecteze originalul):\n";
         licCopy.plaseazaOferta(pRadu, 90000); // pRadu are 90k, oferta valida
 
-        Participant* castigatorCopie = licCopy.getCastigatorCurent();
-        Participant* castigatorOriginal = licTesla->getCastigatorCurent();
+        const Participant* castigatorCopie = licCopy.getCastigatorCurent();
+
+        const Participant* castigatorOriginal = licTesla->getCastigatorCurent();
 
         cout << "Castigator curent COPIE: " << (castigatorCopie ? castigatorCopie->getNume() : "N/A") << endl;
         cout << "Castigator curent ORIGINAL: " << (castigatorOriginal ? castigatorOriginal->getNume() : "N/A") << endl;
@@ -822,7 +824,6 @@ int main() {
         cout << "Se muta licitatia Golf...\n";
         Licitatie licMoved = std::move(*licGolf);
         cout << "--- LICITATIE MUTATA ---\n" << licMoved << "\n";
-        // *licGolf este acum intr-o stare nedefinita (mutata)
     }
 
     cout << "\n====================================================\n";
