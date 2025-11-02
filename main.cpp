@@ -378,7 +378,7 @@ public:
         return os;
     }
 
-    [[nodiscard]] string getVIN() const {
+    [[nodiscard]] const string& getVIN() const {
         return vin;
     }
 
@@ -426,14 +426,14 @@ public:
     ~Licitatie() {
         delete[] this->descriereEveniment;
     }
-    
+
     Licitatie(const Licitatie& other) :
     idLicitatie(other.idLicitatie),vehiculVanzare(other.vehiculVanzare),dataStart(other.dataStart),dataEnd(other.dataEnd),durataMinute(other.durataMinute),
     pretCurent(other.pretCurent),castigatorCurent(other.castigatorCurent),participants(other.participants) {
         this->descriereEveniment = new char[strlen(other.descriereEveniment)+1];
         strcpy(this->descriereEveniment, other.descriereEveniment);
     }
-    
+
     Licitatie& operator=(const Licitatie& other){
         if (this != &other) {
             this->vehiculVanzare=other.vehiculVanzare;
@@ -532,6 +532,14 @@ public:
         return idLicitatie;
     }
 
+    [[nodiscard]] Participant* getCastigatorCurent() const {
+        return castigatorCurent;
+    }
+
+    [[nodiscard]] const Vehicul& getVehicul() const {
+        return vehiculVanzare;
+    }
+
     void finalizeazaLicitatie() const {
         cout << "Final licitatie ID: " << this->idLicitatie << "\n";
 
@@ -586,7 +594,7 @@ public:
     }
 
     void creeazaLicitatie(const string& vin, const DataOra& start, int durata, const string& descriere) {
-        Vehicul* vehiculLicitatie = nullptr;
+        const Vehicul* vehiculLicitatie = nullptr;
         for (auto& v : inventarVehicule) {
             if (v.getVIN() == vin) {
                 vehiculLicitatie = &v;
@@ -638,67 +646,199 @@ Vehicul creeazaVehiculTemporar() {
 }
 
 int main() {
-
-    // --- 1. CONFIGURAREA SISTEMULUI ---
     cout << "====================================================\n";
-    cout << "## Initializare Sistem de Licitatii ##\n";
+    cout << "## INITIALIZARE SISTEM DE LICITATII AUTO ##\n";
     cout << "====================================================\n";
-    AuctionManager manager("Parc Auto Licitatii SRL");
+    AuctionManager manager("AuctionHouse SRL");
+    cout << manager << endl;
 
-    // Adaugam participanti in sistem
-    manager.inregistrareParticipant(Participant(101, "Ana Popescu", "ana.p@email.com", 20000.0));
-    manager.inregistrareParticipant(Participant(102, "Mihai Ionescu", "mihai.i@email.com", 35000.0));
-
-    // Adaugam vehicule in inventar folosind functia ajutatoare si move semantics
-    manager.adaugaVehiculInParc(creeazaVehiculTemporar()); // Adaugam un VW Golf 5
-
-    SpecificatiiTehnice specsAudi(1968, 190, DIESEL, AUTOMATA, INTEGRALA);
-    DataOra dataListare(2025, 10, 29, 22, 0);
-    manager.adaugaVehiculInParc(Vehicul("VIN987ABC", "Audi", "A6", 2021, 85000, 32000, specsAudi, dataListare, "Stare excelenta"));
-
-    manager.afiseazaInventar();
-
-    // --- 2. CREAREA UNEI LICITATII ---
-    cout << "\n====================================================\n";
-    cout << "## Creare si Desfasurare Licitatie ##\n";
+    // ---------------------------------------------------------
+    cout << "====================================================\n";
+    cout << "## GESTIONARE PARTICIPANTI ##\n";
     cout << "====================================================\n";
 
-    DataOra startLicitatie = obtineOraCurenta(); // Licitatia incepe ACUM
-    manager.creeazaLicitatie("VIN_TEMP_123", startLicitatie, 1, "Licitatie rapida pentru VW Golf 5");
+    manager.inregistrareParticipant(Participant(101, "Ana Popescu", "ana.popescu@cti.ro", 25000.0));
+    manager.inregistrareParticipant(Participant(102, "Mihai Ionescu", "mihai.ionescu@cti.ro", 75000.0));
+    manager.inregistrareParticipant(Participant(103, "Ioana Marinescu", "ioana.marinescu@cti.ro", 15000.0));
+    manager.inregistrareParticipant(Participant(104, "Radu Vasilescu", "radu.v@cti.ro", 90000.0));
+    manager.inregistrareParticipant(Participant(105, "Elena Dragomir", "elena.d@cti.ro", 5000.0));
 
-    // --- 3. INTERACTIUNEA PARTICIPANTILOR ---
-    Licitatie* licitatieActiva = manager.getLicitatieById(1);
+    cout << "\n--> Testare eroare: Cautare ID inexistent (999)...\n";
+    Participant* pFake = manager.getParticipantById(999);
+    if (pFake == nullptr) {
+        cout << "SUCCES: Participantul cu ID 999 nu a fost gasit.\n";
+    } else {
+        cout << "EROARE: Gasit participant inexistent: " << *pFake << "\n";
+    }
+
     Participant* pAna = manager.getParticipantById(101);
     Participant* pMihai = manager.getParticipantById(102);
+    Participant* pIoana = manager.getParticipantById(103);
+    Participant* pRadu = manager.getParticipantById(104);
+    Participant* pElena = manager.getParticipantById(105);
 
-    if (licitatieActiva != nullptr && pAna != nullptr && pMihai != nullptr) {
-        licitatieActiva->inscrieParticipant(pAna);
-        licitatieActiva->inscrieParticipant(pMihai);
-
-        cout << "\n--> Ana plaseaza o oferta...\n";
-        licitatieActiva->plaseazaOferta(pAna, 4500.0);
-
-        cout << "\n--> Mihai plaseaza o contra-oferta...\n";
-        licitatieActiva->plaseazaOferta(pMihai, 4800.0);
-
-        cout << "\n--> Ana incearca sa oferteze prea putin...\n";
-        licitatieActiva->plaseazaOferta(pAna, 4800.0); // Va esua
-
-        cout << "\n--- Starea finala a licitatiei ---\n";
-        cout << *licitatieActiva;
+    if (pElena) {
+        cout << "\n--> Testare operatii pe " << pElena->getNume() << ":\n";
+        pElena->topUp(500);
+        pElena->retragere(200);
+        pElena->retragere(99999); // caz invalid (fonduri insuficiente)
+        pElena->afiseazaIstoric();
     }
 
-    // --- 4. FINALIZAREA LICITATIEI ---
     cout << "\n====================================================\n";
-    cout << "## Finalizare Licitatie ##\n";
+    cout << "## ADAUGARE VEHICULE IN INVENTAR (EXTINS) ##\n";
     cout << "====================================================\n";
 
-    if (licitatieActiva != nullptr) {
-        licitatieActiva->finalizeazaLicitatie();
+    manager.adaugaVehiculInParc(creeazaVehiculTemporar()); // VW Golf (VIN_TEMP_123)
+
+    SpecificatiiTehnice specsAudi(1968, 190, DIESEL, AUTOMATA, INTEGRALA);
+    SpecificatiiTehnice specsTesla(0, 450, ELECTRIC, AUTOMATA, INTEGRALA);
+    SpecificatiiTehnice specsDacia(1461, 115, DIESEL, MANUALA, FATA);
+    DataOra dataAudi(2025, 10, 25, 15, 45);
+    DataOra dataTesla(2025, 10, 29, 22, 0);
+    DataOra dataDacia(2025, 11, 1, 10, 0);
+
+    manager.adaugaVehiculInParc(Vehicul("VIN987ABC", "Audi", "A6", 2021, 85000, 32000, specsAudi, dataAudi, "Stare excelenta"));
+    manager.adaugaVehiculInParc(Vehicul("VIN555TES", "Tesla", "Model S", 2022, 30000, 65000, specsTesla, dataTesla, "Autonomie mare"));
+    manager.adaugaVehiculInParc(Vehicul("VIN111DAC", "Dacia", "Duster", 2019, 95000, 12000, specsDacia, dataDacia, "4x2, economic"));
+
+
+    cout << "\n>>> Inventar actual:\n";
+    manager.afiseazaInventar();
+
+    // ---------------------------------------------------------
+    cout << "\n====================================================\n";
+    cout << "## CREARE LICITATII MULTIPLE SI TESTE DE EROARE ##\n";
+    cout << "====================================================\n";
+
+    // Le pornim pe toate acum
+    DataOra start1 = obtineOraCurenta();
+    DataOra start2 = obtineOraCurenta();
+    DataOra start3 = obtineOraCurenta();
+
+    // Licitatie pentru Bidding War
+    manager.creeazaLicitatie("VIN555TES", start1, 5, "Licitatie Tesla Model S - Bid War");
+    // Licitatie care va esua (fara oferte)
+    manager.creeazaLicitatie("VIN111DAC", start2, 2, "Licitatie Dacia Duster - Fără Oferte");
+    // Licitatie pentru testare Copiere/Mutare
+    manager.creeazaLicitatie("VIN_TEMP_123", start3, 1, "Licitatie VW Golf - Pentru testare operatori");
+
+    cout << "\n--> Testare eroare: Creare licitatie pentru VIN inexistent (VIN_FAKE)...\n";
+    manager.creeazaLicitatie("VIN_FAKE", start1, 5, "Test esuat");
+
+    Licitatie* licTesla = manager.getLicitatieById(1);
+    Licitatie* licDacia = manager.getLicitatieById(2);
+    Licitatie* licGolf = manager.getLicitatieById(3);
+
+    // ---------------------------------------------------------
+    cout << "\n====================================================\n";
+    cout << "## LICITATIE #1: TESLA (RAZBOI AL OFERTELOR) ##\n";
+    cout << "====================================================\n";
+    if (licTesla && pMihai && pRadu && pAna) {
+        cout << "Stari initiale participanti:\n" << *pMihai << "\n" << *pRadu << "\n" << *pAna << "\n";
+
+        licTesla->inscrieParticipant(pMihai);
+        licTesla->inscrieParticipant(pRadu);
+        licTesla->inscrieParticipant(pAna);
+
+        double pretPornireTesla = licTesla->getVehicul().calculPretRezerva();
+        cout << "\n--- Incepe licitatia pentru Tesla (Pornire: " << pretPornireTesla << ") ---\n";
+
+        licTesla->plaseazaOferta(pAna, 60000);   // Prea mica (sub pret pornire calculat)
+        licTesla->plaseazaOferta(pMihai, 66000); // OK (presupunand ca pornirea e ~65k)
+        licTesla->plaseazaOferta(pRadu, 68000);  // OK
+        licTesla->plaseazaOferta(pMihai, 70000); // OK
+        licTesla->plaseazaOferta(pRadu, 72000);  // OK
+        licTesla->plaseazaOferta(pMihai, 74000); // OK
+        licTesla->plaseazaOferta(pRadu, 80000);  // OK (Radu are 90k)
+        licTesla->plaseazaOferta(pMihai, 82000); // EROARE: Mihai are doar 75k (fonduri insuficiente)
+        licTesla->plaseazaOferta(pAna, 75000);   // EROARE: Ana are doar 25k (fonduri insuficiente)
+
+        cout << "\n--- Stare inainte de finalizare (Licitatia #1) ---\n";
+        cout << *licTesla << "\n";
+    }
+
+    // ---------------------------------------------------------
+    cout << "\n====================================================\n";
+    cout << "## LICITATIE #2: DACIA (LICITATIE ESUATA) ##\n";
+    cout << "====================================================\n";
+    if (licDacia && pIoana && pElena) {
+        licDacia->inscrieParticipant(pIoana);
+        licDacia->inscrieParticipant(pElena);
+
+        cout << "\n--- Nicio oferta plasata pentru Licitatia #2 ---\n";
+        cout << "\n--- Stare inainte de finalizare (Licitatia #2) ---\n";
+        cout << *licDacia << "\n";
+    }
+
+    // ---------------------------------------------------------
+    cout << "\n====================================================\n";
+    cout << "## FINALIZARE LICITATII (Test Apel) ##\n";
+    cout << "====================================================\n";
+
+    if (licTesla) {
+        cout << "\nFinalizare licitatie 1 (Tesla):\n";
+        licTesla->finalizeazaLicitatie();
+    }
+    if (licDacia) {
+        cout << "\nFinalizare licitatie 2 (Dacia):\n";
+        licDacia->finalizeazaLicitatie();
+    }
+
+    // ---------------------------------------------------------
+    cout << "\n====================================================\n";
+    cout << "## TESTARE OPERATORI COPIERE SI MUTARE (REGULA LUI 5) ##\n";
+    cout << "====================================================\n";
+
+    cout << "\n-> Copiere Vehicul (Test Vehicul::Vehicul(const Vehicul&)):\n";
+    Vehicul vehTemp = creeazaVehiculTemporar();
+    Vehicul vehCopie(vehTemp);
+    cout << "Original:\n" << vehTemp << "Copie:\n" << vehCopie << "\n";
+
+    cout << "\n-> Mutare Vehicul (Test Vehicul::Vehicul(Vehicul&&)):\n";
+    Vehicul vehMutat = std::move(vehTemp);
+    cout << "Obiect mutat:\n" << vehMutat << "\n";
+    // cout << vehTemp << "\n"; // Ar trebui sa fie intr-o stare goala/valida
+
+    cout << "\n-> Copiere Licitatie (Test Licitatie::Licitatie(const Licitatie&)):\n";
+    if (licTesla) {
+        cout << "Se copiaza licitatia Tesla (care are oferte si participanti)...\n";
+        Licitatie licCopy = *licTesla;
+        cout << "--- LICITATIE ORIGINALA ---\n" << *licTesla << "\n";
+        cout << "--- LICITATIE COPIATA ---\n" << licCopy << "\n";
+
+        cout << "Se plaseaza o oferta pe COPIE (nu ar trebui sa afecteze originalul):\n";
+        licCopy.plaseazaOferta(pRadu, 90000); // pRadu are 90k, oferta valida
+
+        Participant* castigatorCopie = licCopy.getCastigatorCurent();
+        Participant* castigatorOriginal = licTesla->getCastigatorCurent();
+
+        cout << "Castigator curent COPIE: " << (castigatorCopie ? castigatorCopie->getNume() : "N/A") << endl;
+        cout << "Castigator curent ORIGINAL: " << (castigatorOriginal ? castigatorOriginal->getNume() : "N/A") << endl;
+    }
+
+    cout << "\n-> Mutare Licitatie (Test Licitatie::Licitatie(Licitatie&&)):\n";
+    if (licGolf) {
+        cout << "Se muta licitatia Golf...\n";
+        Licitatie licMoved = std::move(*licGolf);
+        cout << "--- LICITATIE MUTATA ---\n" << licMoved << "\n";
+        // *licGolf este acum intr-o stare nedefinita (mutata)
     }
 
     cout << "\n====================================================\n";
-    cout << "## Sfarsitul simularii. ##\n";
+    cout << "## STARE FINALA SISTEM ##\n";
+    cout << "====================================================\n";
+    cout << manager << endl;
+
+    cout << "\n--- Starea finala a participantilor (dupa operatii in memorie) ---\n";
+    if (pAna) cout << *pAna << endl;
+    if (pMihai) cout << *pMihai << endl;
+    if (pIoana) cout << *pIoana << endl;
+    if (pRadu) cout << *pRadu << endl;
+    if (pElena) cout << *pElena << endl;
+
+    cout << "\n====================================================\n";
+    cout << "## SFARSITUL SIMULARII ##\n";
     cout << "====================================================\n";
 
     return 0;
