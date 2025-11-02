@@ -426,14 +426,14 @@ public:
     ~Licitatie() {
         delete[] this->descriereEveniment;
     }
-/*
+    
     Licitatie(const Licitatie& other) :
-    idLicitatie(other.idLicitatie),vehiculVanzare(other.vehiculVanzare),dataStart(other.dataStart),durataMinute(other.durataMinute),pretCurent(other.pretCurent),
-    castigatorCurent(other.castigatorCurent),participants(other.participants),dataEnd(other.dataEnd) {
+    idLicitatie(other.idLicitatie),vehiculVanzare(other.vehiculVanzare),dataStart(other.dataStart),dataEnd(other.dataEnd),durataMinute(other.durataMinute),
+    pretCurent(other.pretCurent),castigatorCurent(other.castigatorCurent),participants(other.participants) {
         this->descriereEveniment = new char[strlen(other.descriereEveniment)+1];
         strcpy(this->descriereEveniment, other.descriereEveniment);
     }
-
+    
     Licitatie& operator=(const Licitatie& other){
         if (this != &other) {
             this->vehiculVanzare=other.vehiculVanzare;
@@ -451,7 +451,7 @@ public:
         return *this;
    }
 
-*/
+
     Licitatie(Licitatie&& other)  noexcept :
     idLicitatie(other.idLicitatie), vehiculVanzare(std::move(other.vehiculVanzare)),dataStart(other.dataStart), dataEnd(other.dataEnd),
     durataMinute(other.durataMinute), pretCurent(other.pretCurent), castigatorCurent(other.castigatorCurent), participants(std::move(other.participants)) {
