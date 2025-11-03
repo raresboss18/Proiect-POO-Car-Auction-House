@@ -581,7 +581,7 @@ public:
     }
 
     Participant* getParticipantById(int id) {
-        for (auto& p : listaParticipanti) {
+        for (Participant& p : listaParticipanti) {
             if (p.getId() == id) {
                 return &p;
             }
@@ -595,7 +595,7 @@ public:
 
     void creeazaLicitatie(const string& vin, const DataOra& start, int durata, const string& descriere) {
         const Vehicul* vehiculLicitatie = nullptr;
-        for (auto& v : inventarVehicule) {
+        for (Vehicul& v : inventarVehicule) {
             if (v.getVIN() == vin) {
                 vehiculLicitatie = &v;
                 break;
@@ -612,7 +612,7 @@ public:
     }
 
     Licitatie* getLicitatieById(int id) {
-        for (auto& lic : listaLicitatii) {
+        for (Licitatie& lic : listaLicitatii) {
             if (lic.getId() == id) {
                 return &lic;
             }
@@ -622,7 +622,7 @@ public:
 
     void afiseazaInventar() const {
         cout << "Inventar Vehicule (" << numeCasaLicitatii << ")\n";
-        for (const auto& v : inventarVehicule) {
+        for (const Vehicul& v : inventarVehicule) {
             cout << v;
         }
     }
