@@ -590,7 +590,7 @@ public:
     }
 
     void adaugaVehiculInParc(Vehicul&& vehicul) {
-        inventarVehicule.push_back(std::move(vehicul));
+        inventarVehicule.push_back(vehicul);
     }
 
     void creeazaLicitatie(const string& vin, const DataOra& start, int durata, const string& descriere) {
@@ -604,8 +604,8 @@ public:
 
         if (vehiculLicitatie != nullptr) {
             Licitatie licitatieNoua(nextLicitatieId++, *vehiculLicitatie, start, durata, descriere);
-            listaLicitatii.push_back(std::move(licitatieNoua)); // Adaugam eficient licitatia in lista
-            cout << "-> Licitatie noua creata cu succes pentru vehiculul cu VIN: " << vin << endl;
+            listaLicitatii.push_back(licitatieNoua);
+            cout << "Licitatie noua creata cu succes pentru vehiculul cu VIN: " << vin << endl;
         } else {
             cout << "Vehiculul cu VIN " << vin << " nu a fost gasit in inventar.\n";
         }
@@ -640,7 +640,6 @@ public:
 Vehicul creeazaVehiculTemporar() {
     SpecificatiiTehnice specs(1598, 115, BENZINA, MANUALA, FATA);
     DataOra data(2025, 3, 15, 10, 0);
-    // Cream un obiect local, temporar
     Vehicul v_temp("VIN_TEMP_123", "VW", "Golf 5", 2008, 210000, 4000, specs, data, "Uzura normala conform varstei");
     return v_temp;
 }
