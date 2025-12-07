@@ -3,8 +3,7 @@
 //
 
 #include "DataOra.h"
-#include <chrono>
-#include <ctime>
+#include <iostream>
 
 using namespace std;
 
@@ -27,51 +26,31 @@ DataOra::DataOra(int an, int luna, int zi, int ora, int minut, int secunda) {
 }
 
 ostream& operator<<(ostream& os, const DataOra& time) {
-    os<<time.zi<<"/"<<time.luna<<"/"<<time.an<<"  ";
-    if (time.ora==0)
-        os<<time.ora<<"0:";
-    else {
-        os<<time.ora<<":";
-    }
-    if (time.minut==0)
-        os<<time.minut<<"0:";
-    else {
-        os<<time.minut<<":";
-    }
-    if (time.secunda==0)
-        os<<time.secunda<<"0\n";
-    else {
-        os<<time.secunda<<"\n";
-    }
+    os << time.zi << "/" << time.luna << "/" << time.an << "  ";
+    
+    if (time.ora < 10) os << "0";
+    os << time.ora << ":";
+    
+    if (time.minut < 10) os << "0";
+    os << time.minut << ":";
+    
+    if (time.secunda < 10) os << "0";
+    os << time.secunda;
+    
     return os;
 }
 
 bool DataOra::operator<(const DataOra& other) const {
-    if (an != other.an)
-        return an < other.an;
-    if (luna != other.luna)
-        return luna < other.luna;
-    if (zi != other.zi)
-        return zi < other.zi;
-    if (ora != other.ora)
-        return ora < other.ora;
-    if (minut != other.minut)
-        return minut < other.minut;
+    if (an != other.an) return an < other.an;
+    if (luna != other.luna) return luna < other.luna;
+    if (zi != other.zi) return zi < other.zi;
+    if (ora != other.ora) return ora < other.ora;
+    if (minut != other.minut) return minut < other.minut;
     return secunda < other.secunda;
 }
 
 bool DataOra::operator>(const DataOra& other) const {
-    if (an != other.an)
-        return an > other.an;
-    if (luna != other.luna)
-        return luna > other.luna;
-    if (zi != other.zi)
-        return zi > other.zi;
-    if (ora != other.ora)
-        return ora > other.ora;
-    if (minut != other.minut)
-        return minut > other.minut;
-    return secunda > other.secunda;
+    return other < *this;
 }
 
 void DataOra::adaugaMinute(int minuteAdaugate) {
@@ -88,18 +67,17 @@ void DataOra::adaugaMinute(int minuteAdaugate) {
 }
 
 DataOra DataOra::obtineOraCurenta() {
-    auto now = chrono::system_clock::now();
-    time_t now_time = chrono::system_clock::to_time_t(now);
-    tm local_tm = *localtime(&now_time);
-
-    return DataOra(
-        local_tm.tm_year + 1900,
-        local_tm.tm_mon + 1,
-        local_tm.tm_mday,
-        local_tm.tm_hour,
-        local_tm.tm_min,
-        local_tm.tm_sec
-    );
+    // simulam timpul 
+    static int minuteSimulate = 0;
+    
+    // pornim de la 07.12.2025, ora 12:00
+    DataOra time(2025, 12, 7, 12, 0, 0);
+    
+    // avansam timpul
+    time.adaugaMinute(minuteSimulate);
+    
+    //pPregatim urmatorul apel sa fie cu 60 minute mai tarziu
+    minuteSimulate += 60;
+    
+    return time;
 }
-
-
