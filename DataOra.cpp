@@ -90,7 +90,13 @@ void DataOra::adaugaMinute(int minuteAdaugate) {
 DataOra DataOra::obtineOraCurenta() {
     auto now = chrono::system_clock::now();
     time_t now_time = chrono::system_clock::to_time_t(now);
-    tm local_tm = *localtime(&now_time);
+    tm local_tm{};
+
+#if defined(_WIN32) || defined(_WIN64)
+    localtime_s(&local_tm, &now_time);
+#else
+    localtime_r(&now_time, &local_tm);
+#endif
 
     return DataOra(
         local_tm.tm_year + 1900,
@@ -100,4 +106,5 @@ DataOra DataOra::obtineOraCurenta() {
         local_tm.tm_min,
         local_tm.tm_sec
     );
+
 }
