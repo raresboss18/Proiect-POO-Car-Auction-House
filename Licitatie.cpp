@@ -99,7 +99,7 @@ void Licitatie::inscrieParticipant(Participant* p) {
 }
 
 void Licitatie::plaseazaOferta(Participant* ofertant, double sumaOferita) {
-    if (DataOra::obtineOraCurenta() > this->dataEnd) {
+    if (/*DataOra::*/obtineOraCurenta() > this->dataEnd) {
         cout << "Licitatia a expirat! Nu se mai pot plasa oferte.\n";
         return;
     }
@@ -127,7 +127,7 @@ void Licitatie::plaseazaOferta(Participant* ofertant, double sumaOferita) {
 void Licitatie::finalizeazaLicitatie() const {
     cout << "Licitatie ID: " << this->idLicitatie << "\n";
 
-    if (DataOra::obtineOraCurenta() > this->dataEnd) {
+    if (/*DataOra::*/obtineOraCurenta() > this->dataEnd) {
         if (this->castigatorCurent != nullptr) {
             cout << "Licitatia s-a incheiat!\n";
             cout << "Castigator: " << this->castigatorCurent->getNume() << " cu suma de " << this->pretCurent << " EUR.\n";
