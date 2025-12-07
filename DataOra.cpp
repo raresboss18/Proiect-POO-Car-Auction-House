@@ -93,9 +93,9 @@ DataOra DataOra::obtineOraCurenta() {
     tm local_tm{};
 
 #if defined(_WIN32) || defined(_WIN64)
-    localtime_s(&local_tm, &now_time);
+    gmtime_s(&local_tm, &now_time);
 #else
-    localtime_r(&now_time, &local_tm);
+    gmtime_r(&now_time, &local_tm);
 #endif
 
     return DataOra(
@@ -108,3 +108,4 @@ DataOra DataOra::obtineOraCurenta() {
     );
 
 }
+
