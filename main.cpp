@@ -137,7 +137,7 @@ int main() {
         }
 
         cout << "\nTestare istoric participant:\n";
-        if(Participant* p = manager.getParticipantById(101)) {
+        if(const Participant* p = manager.getParticipantById(101)) {
             p->afiseazaIstoric(); //
         }
 
