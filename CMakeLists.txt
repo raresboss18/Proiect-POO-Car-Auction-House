@@ -3,7 +3,7 @@ project(proiect_poo)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(proiect_poo main.cpp
+add_executable(main main.cpp
         DataOra.h
         DataOra.cpp
         Participant.cpp
