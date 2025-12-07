@@ -86,7 +86,7 @@ void DataOra::adaugaMinute(int minuteAdaugate) {
     }
     valideaza();
 }
-
+/*
 DataOra DataOra::obtineOraCurenta() {
     auto now = chrono::system_clock::now();
     time_t now_time = chrono::system_clock::to_time_t(now);
@@ -100,4 +100,5 @@ DataOra DataOra::obtineOraCurenta() {
         local_tm.tm_min,
         local_tm.tm_sec
     );
-}
+}*/
+
