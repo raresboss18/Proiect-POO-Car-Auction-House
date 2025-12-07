@@ -18,7 +18,7 @@ int main() {
         AuctionManager manager("AuctionHouse");
 
         // 2. Setup Date Comune si Specificatii
-        DataOra dataCurenta = DataOra::obtineOraCurenta();
+        DataOra dataCurenta = obtineOraCurenta();
 
         SpecificatiiTehnice specDiesel(2000, 150, DIESEL, MANUALA, FATA);
         SpecificatiiTehnice specSport(2998, 300, BENZINA, AUTOMATA, SPATE);
