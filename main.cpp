@@ -14,7 +14,7 @@ int main() {
     cout << "===============================================\n\n";
 
     try {
-        // 1. Initializare Manager (Casa de Licitatii)
+        // 1. Initializare Manager
         AuctionManager manager("AuctionHouse");
 
         // 2. Setup Date Comune si Specificatii
@@ -82,13 +82,22 @@ int main() {
             cout << "-> Tiriac ofera 35000 EUR...\n";
             lic->plaseazaOferta(pTiriac, 35000);
 
+            // Folosim getCastigatorCurent
+            if(lic->getCastigatorCurent() != nullptr) {
+                cout << "Verificare getter: Castigatorul curent este " << lic->getCastigatorCurent()->getNume() << endl;
+            }
+            // Folosim getVehicul
+            if(lic->getVehicul() != nullptr) {
+                cout << "Verificare getter: Vehiculul licitat are VIN " << lic->getVehicul()->getVIN() << endl;
+            }
+
             cout << "\n--- Status Licitatie ---\n";
             // Aici se retrag banii din contul lui Tiriac
             lic->finalizeazaLicitatie();
         }
 
         // 7. TESTARE EXCEPTII (Blocuri try-catch interne pentru demo)
-        cout << "\n>>> 5. TESTARE EXCEPTII (ROBUSTETE) <<<\n";
+        cout << "\n>>> 5. TESTARE EXCEPTII <<<\n";
 
         // TEST A: Creare vehicul cu pret negativ (Constructor Vehicul)
         cout << "\n[TEST A] Incercare creare vehicul cu pret -500...\n";
@@ -125,6 +134,11 @@ int main() {
             }
         } catch (const AuctionException& e) {
             cout << "--> EXCEPTIE PRINSA: " << e.what() << endl;
+        }
+
+        cout << "\nTestare istoric participant:\n";
+        if(Participant* p = manager.getParticipantById(101)) {
+            p->afiseazaIstoric(); //
         }
 
     }
