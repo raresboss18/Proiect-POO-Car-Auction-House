@@ -68,8 +68,12 @@ Vehicul& Vehicul::operator=(const Vehicul& other) {
         this->dataOra = other.dataOra;
 
         delete[] this->observatiiTehnice;
-        this->observatiiTehnice = new char[strlen(other.observatiiTehnice) + 1];
-        strcpy(this->observatiiTehnice, other.observatiiTehnice);
+        if (other.observatiiTehnice != nullptr) {
+            this->observatiiTehnice = new char[strlen(other.observatiiTehnice) + 1];
+            strcpy(this->observatiiTehnice, other.observatiiTehnice);
+        } else {
+            this->observatiiTehnice = nullptr;
+        }
     }
     return *this;
 }

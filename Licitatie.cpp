@@ -29,7 +29,7 @@ Licitatie::~Licitatie() {
 
 Licitatie::Licitatie(const Licitatie& other) :
     idLicitatie(other.idLicitatie), vehiculVanzare(nullptr), dataStart(other.dataStart), dataEnd(other.dataEnd), durataMinute(other.durataMinute),
-    pretCurent(other.pretCurent), castigatorCurent(other.castigatorCurent), participants(other.participants) {
+    pretCurent(other.pretCurent), castigatorCurent(other.castigatorCurent), participants() {
 
     if (other.vehiculVanzare !=nullptr) {
         this->vehiculVanzare = other.vehiculVanzare->clone();
@@ -52,7 +52,8 @@ Licitatie& Licitatie::operator=(const Licitatie& other) {
         this->dataEnd = other.dataEnd;
         this->pretCurent = other.pretCurent;
         this->castigatorCurent = other.castigatorCurent;
-        this->participants = other.participants;
+        //this->participants = other.participants;
+        participants.clear();
 
         delete[] this->descriereEveniment;
         this->descriereEveniment = new char[strlen(other.descriereEveniment) + 1];
@@ -99,7 +100,7 @@ void Licitatie::inscrieParticipant(Participant* p) {
 }
 
 void Licitatie::plaseazaOferta(Participant* ofertant, double sumaOferita) {
-    if (/*DataOra::*/obtineOraCurenta() > this->dataEnd) {
+    if (DataOra::obtineOraCurenta() > this->dataEnd) {
         cout << "Licitatia a expirat! Nu se mai pot plasa oferte.\n";
         return;
     }
@@ -127,7 +128,7 @@ void Licitatie::plaseazaOferta(Participant* ofertant, double sumaOferita) {
 void Licitatie::finalizeazaLicitatie() const {
     cout << "Licitatie ID: " << this->idLicitatie << "\n";
 
-    if (/*DataOra::*/obtineOraCurenta() > this->dataEnd) {
+    if (DataOra::obtineOraCurenta() > this->dataEnd) {
         if (this->castigatorCurent != nullptr) {
             cout << "Licitatia s-a incheiat!\n";
             cout << "Castigator: " << this->castigatorCurent->getNume() << " cu suma de " << this->pretCurent << " EUR.\n";
