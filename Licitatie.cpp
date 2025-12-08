@@ -133,7 +133,7 @@ void Licitatie::finalizeazaLicitatie() const {
             cout << "Castigator: " << this->castigatorCurent->getNume() << " cu suma de " << this->pretCurent << " EUR.\n";
             cout << "Procesare plata...\n";
 
-            this->castigatorCurent->retragere(this->pretCurent);
+            //this->castigatorCurent->retragere(this->pretCurent);
 
             cout << "Soldul final al castigatorului:\n" << *(this->castigatorCurent);
         } else {
@@ -176,4 +176,5 @@ Participant* Licitatie::getCastigatorCurent() const {
 
 const Vehicul* Licitatie::getVehicul() const {
     return vehiculVanzare;
+
 }
