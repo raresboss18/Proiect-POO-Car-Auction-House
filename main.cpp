@@ -30,7 +30,7 @@ int main() {
         manager.inregistrareParticipant(Participant(103, "Firma Curierat", "logistica@fan.ro", 25000));
 
         // --- 1. ADAUGARE CU SMART POINTERS ---
-        cout << ">>> 1. ADAUGARE VEHICULE (SMART POINTERS) <<<\n";
+        cout << ">>> 1. ADAUGARE VEHICULE  <<<\n";
 
         // A. Autoturism
         manager.adaugaVehiculInParc(std::make_unique<Autoturism>(
@@ -47,7 +47,7 @@ int main() {
             "YAMA-R1-003", "Yamaha", "R1", 2022, 10000, 15000, specSport, dataCurenta, "Ca noua", SPORT
         ));
 
-        // D. Microbuz (TESTARE CLASA NOUA)
+        // D. Microbuz 
         manager.adaugaVehiculInParc(std::make_unique<Microbuz>(
             "MB-SPR-2020", "Mercedes", "Sprinter", 2020, 180000, 35000, specMicro, dataCurenta, "AC functional pasageri", 20));
 
@@ -62,8 +62,6 @@ int main() {
         manager.afiseazaAutoturism();
         manager.afiseazaMotocicleta();
         manager.afiseazaAutoutilitara();
-
-        // <--- AICI TESTAM FUNCTIA NOUA PENTRU MICROBUZ --->
         manager.afiseazaMicrobuz();
 
         // --- 4. LICITATIE ---
@@ -82,8 +80,21 @@ int main() {
             cout << "-> Studentul ofera 600 EUR...\n";
             lic->plaseazaOferta(pStudent, 600);
 
+            cout << "-> Tiriac ofera 700 EUR...\n";
+            lic->plaseazaOferta(pTiriac, 700);
+
+            cout << "-> Studentul ofera 750 EUR...\n";
+            lic->plaseazaOferta(pStudent, 600);
+
             cout << "-> Tiriac ofera 35000 EUR...\n";
             lic->plaseazaOferta(pTiriac, 35000);
+
+            if(lic->getCastigatorCurent() != nullptr) {
+                cout << " Castigatorul curent este " << lic->getCastigatorCurent()->getNume() << endl;
+            }
+            if(lic->getVehicul() != nullptr) {
+                cout << " Vehiculul licitat are VIN " << lic->getVehicul()->getVIN() << endl;
+            }
 
             lic->finalizeazaLicitatie();
         }
