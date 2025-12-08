@@ -5,9 +5,9 @@
 #ifndef PROIECT_POO_AUCTIONMANAGER_H
 #define PROIECT_POO_AUCTIONMANAGER_H
 
-#include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
 #include "Vehicul.h"
 #include "Participant.h"
 #include "Licitatie.h"
@@ -16,7 +16,7 @@
 class AuctionManager {
 private:
     std::string numeCasaLicitatii;
-    std::vector<Vehicul*> inventarVehicule;
+    std::vector<std::unique_ptr<Vehicul>> inventarVehicule;
     std::vector<Participant> listaParticipanti;
     std::vector<Licitatie> listaLicitatii;
     int nextLicitatieId;
@@ -28,13 +28,14 @@ public:
 
     void inregistrareParticipant(const Participant& p);
     Participant* getParticipantById(int id);
-    void adaugaVehiculInParc(Vehicul* vehicul);
+    void adaugaVehiculInParc(std::unique_ptr<Vehicul> vehicul);
     void creeazaLicitatie(const std::string& vin, const DataOra& start, int durata, const std::string& descriere);
     Licitatie* getLicitatieById(int id);
     void afiseazaInventar() const;
     void afiseazaAutoturism() const;
     void afiseazaAutoutilitara() const;
     void afiseazaMotocicleta() const;
+    void afiseazaMicrobuz() const;
 
     friend std::ostream& operator<<(std::ostream& os, const AuctionManager& manager);
 };

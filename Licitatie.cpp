@@ -133,7 +133,7 @@ void Licitatie::finalizeazaLicitatie() const {
             cout << "Castigator: " << this->castigatorCurent->getNume() << " cu suma de " << this->pretCurent << " EUR.\n";
             cout << "Procesare plata...\n";
 
-            //this->castigatorCurent->retragere(this->pretCurent);
+            this->castigatorCurent->retragere(this->pretCurent);
 
             cout << "Soldul final al castigatorului:\n" << *(this->castigatorCurent);
         } else {
@@ -149,19 +149,16 @@ ostream& operator<<(ostream& os, const Licitatie& licitatie) {
     if (licitatie.descriereEveniment != nullptr) {
         os << licitatie.descriereEveniment << endl;
     }
-    
-    if (licitatie.vehiculVanzare != nullptr) {
-        os << "Vehicul la licitatie: " << licitatie.vehiculVanzare->getVIN() << endl;
+    if (licitatie.vehiculVanzare !=nullptr) {
+        os << "Vehicul vanzare: " << *(licitatie.vehiculVanzare) << endl;
     }
-
-    os << "Data start: " << licitatie.dataStart;
-    os << "Data end: " << licitatie.dataEnd;
-    os << "Pret curent: " << licitatie.pretCurent << " EUR" << endl;
-
+    os << "Data start: " << licitatie.dataStart << endl;
+    os << "Data end: " << licitatie.dataEnd << endl;
+    os << "pret curent: " << licitatie.pretCurent << endl;
     if (licitatie.castigatorCurent != nullptr) {
-        os << "Castigator curent: " << licitatie.castigatorCurent->getNume() << endl;
+        os << *(licitatie.castigatorCurent) << endl;
     } else {
-        os << "Momentan nu a fost inregistrata nici o oferta" << endl;
+        os << "Momentan nu a fost inregistrata nici o oferta";
     }
     return os;
 }
@@ -176,5 +173,4 @@ Participant* Licitatie::getCastigatorCurent() const {
 
 const Vehicul* Licitatie::getVehicul() const {
     return vehiculVanzare;
-
 }

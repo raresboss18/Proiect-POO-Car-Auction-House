@@ -7,15 +7,13 @@
 #include <utility>
 
 #include "Derivate.h"
+#include "Microbuz.h"
 
 using namespace std;
 
 AuctionManager::AuctionManager(string numeCasaLicitatii) : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {}
 
-AuctionManager::~AuctionManager() {
-    for (Vehicul* v : inventarVehicule) {
-        delete v;
-    }
+AuctionManager::~AuctionManager(){
     inventarVehicule.clear();
 }
 
@@ -33,15 +31,15 @@ Participant* AuctionManager::getParticipantById(int id) {
     return nullptr;
 }
 
-void AuctionManager::adaugaVehiculInParc(Vehicul* vehicul) {
-    inventarVehicule.push_back(vehicul);
+void AuctionManager::adaugaVehiculInParc(std::unique_ptr<Vehicul> vehicul) {
+    inventarVehicule.push_back(std::move(vehicul));
 }
 
 void AuctionManager::creeazaLicitatie(const string& vin, const DataOra& start, int durata, const string& descriere) {
     const Vehicul* vehiculLicitatie = nullptr;
-    for (const Vehicul* v : inventarVehicule) {
-        if (v->getVIN() == vin) {
-            vehiculLicitatie = v;
+    for (const auto& v_ptr : inventarVehicule) {
+        if (v_ptr->getVIN() == vin) {
+            vehiculLicitatie = v_ptr.get();
             break;
         }
     }
@@ -66,8 +64,8 @@ Licitatie* AuctionManager::getLicitatieById(int id) {
 
 void AuctionManager::afiseazaInventar() const {
     cout << "Inventar Vehicule (" << numeCasaLicitatii << ")\n";
-    for (const Vehicul* v : inventarVehicule) {
-        cout << *v;
+    for (const auto& v_ptr : inventarVehicule) {
+        cout << *v_ptr;
     }
 }
 
@@ -75,11 +73,10 @@ void AuctionManager::afiseazaInventar() const {
 void AuctionManager::afiseazaAutoturism() const {
     cout << "AUTOTURISME:\n";
     bool gasit = false;
-    for (const Vehicul* v : inventarVehicule) {
-        const auto* autoturism = dynamic_cast<const Autoturism*>(v);
+    for (const auto& v_ptr : inventarVehicule) {
+        const auto* autoturism = dynamic_cast<const Autoturism*>(v_ptr.get());
         if (autoturism != nullptr) {
             gasit = true;
-            //cout << autoturism->getVIN() << "\n";
             cout << *autoturism;
         }
     }
@@ -91,11 +88,10 @@ void AuctionManager::afiseazaAutoturism() const {
 void AuctionManager::afiseazaAutoutilitara() const {
     cout << "AUTOUTILITARE:\n";
     bool gasit = false;
-    for (const Vehicul* v : inventarVehicule) {
-        const auto* autoutilitara = dynamic_cast<const Autoutilitara*>(v);
+    for (const auto& v_ptr : inventarVehicule) {
+        const auto* autoutilitara = dynamic_cast<const Autoutilitara*>(v_ptr.get());
         if (autoutilitara != nullptr) {
             gasit = true;
-            //cout << autoutilitara->getVIN() << "\n";
             cout << *autoutilitara;
         }
     }
@@ -107,16 +103,30 @@ void AuctionManager::afiseazaAutoutilitara() const {
 void AuctionManager::afiseazaMotocicleta() const {
     cout << "MOTOCICLETE:\n";
     bool gasit = false;
-    for (const Vehicul* v : inventarVehicule) {
-        const auto* motocicleta = dynamic_cast<const Motocicleta*>(v);
+    for (const auto& v_ptr : inventarVehicule) {
+        const auto* motocicleta = dynamic_cast<const Motocicleta*>(v_ptr.get());
         if (motocicleta != nullptr) {
             gasit = true;
-            //cout << motocicleta->getVIN() << "\n";
             cout << *motocicleta;
         }
     }
     if (gasit == false) {
         cout <<"Nu s-au gasit motociclete\n";
+    }
+}
+
+void AuctionManager::afiseazaMicrobuz() const {
+    cout << "MICROBUZE:\n";
+    bool gasit = false;
+    for (const auto& v_ptr : inventarVehicule) {
+        const auto* microbuz = dynamic_cast<const Microbuz*>(v_ptr.get());
+        if (microbuz != nullptr) {
+            gasit = true;
+            cout << *microbuz;
+        }
+    }
+    if (gasit == false) {
+        cout <<"Nu s-au gasit microbuze\n";
     }
 }
 
