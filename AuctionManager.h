@@ -19,7 +19,7 @@ private:
     std::string numeCasaLicitatii;
     std::vector<std::unique_ptr<Vehicul>> inventarVehicule;
     std::list<Participant> listaParticipanti;
-    std::vector<Licitatie> listaLicitatii;
+    std::list<Licitatie> listaLicitatii;
     int nextLicitatieId;
 
 public:
@@ -40,5 +40,6 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const AuctionManager& manager);
 };
+
 
 #endif //PROIECT_POO_AUCTIONMANAGER_H
