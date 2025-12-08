@@ -29,7 +29,7 @@ Licitatie::~Licitatie() {
 
 Licitatie::Licitatie(const Licitatie& other) :
     idLicitatie(other.idLicitatie), vehiculVanzare(nullptr), dataStart(other.dataStart), dataEnd(other.dataEnd), durataMinute(other.durataMinute),
-    pretCurent(other.pretCurent), castigatorCurent(other.castigatorCurent), participants() {
+    pretCurent(other.pretCurent), castigatorCurent(other.castigatorCurent), participants(other.participants) {
 
     if (other.vehiculVanzare !=nullptr) {
         this->vehiculVanzare = other.vehiculVanzare->clone();
@@ -52,8 +52,7 @@ Licitatie& Licitatie::operator=(const Licitatie& other) {
         this->dataEnd = other.dataEnd;
         this->pretCurent = other.pretCurent;
         this->castigatorCurent = other.castigatorCurent;
-        //this->participants = other.participants;
-        participants.clear();
+        this->participants = other.participants;
 
         delete[] this->descriereEveniment;
         this->descriereEveniment = new char[strlen(other.descriereEveniment) + 1];

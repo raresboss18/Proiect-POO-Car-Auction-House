@@ -47,15 +47,8 @@ void AuctionManager::creeazaLicitatie(const string& vin, const DataOra& start, i
     }
 
     if (vehiculLicitatie != nullptr) {
-        /*Licitatie licitatieNoua(nextLicitatieId++, vehiculLicitatie, start, durata, descriere);
-        listaLicitatii.push_back(licitatieNoua);*/
-        listaLicitatii.emplace_back(
-        nextLicitatieId++,
-        vehiculLicitatie,
-        start,
-        durata,
-        descriere
-        );
+        Licitatie licitatieNoua(nextLicitatieId++, vehiculLicitatie, start, durata, descriere);
+        listaLicitatii.push_back(licitatieNoua);
         cout << "Licitatie noua creata cu succes pentru vehiculul cu VIN: " << vin << endl;
     } else {
         throw LicitatieInvalidaException(vin);

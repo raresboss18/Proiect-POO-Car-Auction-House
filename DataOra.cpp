@@ -88,18 +88,9 @@ void DataOra::adaugaMinute(int minuteAdaugate) {
 }
 
 DataOra DataOra::obtineOraCurenta() {
-    std::time_t now_time = std::chrono::system_clock::to_time_t(
-        std::chrono::system_clock::now()
-    );
-
-    std::tm local_tm;
-    std::memset(&local_tm, 0, sizeof(std::tm));
-
-#if defined(_WIN32) || defined(_MSC_VER)
-    localtime_s(&local_tm, &now_time);
-#else
-    localtime_r(&now_time, &local_tm);
-#endif
+    auto now = chrono::system_clock::now();
+    time_t now_time = chrono::system_clock::to_time_t(now);
+    tm local_tm = *localtime(&now_time);
 
     return DataOra(
         local_tm.tm_year + 1900,
