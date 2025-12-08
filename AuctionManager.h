@@ -18,8 +18,8 @@ class AuctionManager {
 private:
     std::string numeCasaLicitatii;
     std::vector<std::unique_ptr<Vehicul>> inventarVehicule;
-    std::list<Participant> listaParticipanti;
-    std::list<Licitatie> listaLicitatii;
+    std::vector<Participant> listaParticipanti;
+    std::vector<Licitatie> listaLicitatii;
     int nextLicitatieId;
 
 public:
@@ -40,6 +40,5 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const AuctionManager& manager);
 };
-
 
 #endif //PROIECT_POO_AUCTIONMANAGER_H

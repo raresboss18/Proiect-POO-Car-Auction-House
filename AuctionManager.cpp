@@ -11,7 +11,10 @@
 
 using namespace std;
 
-AuctionManager::AuctionManager(string numeCasaLicitatii) : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {}
+AuctionManager::AuctionManager(string numeCasaLicitatii) : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {
+    listaParticipanti.reserve(100);
+    listaLicitatii.reserve(100);
+}
 
 AuctionManager::~AuctionManager(){
     inventarVehicule.clear();
