@@ -61,7 +61,7 @@ int main() {
 
         // Obtinem pointer la licitatia creata (ID 1)
         Licitatie* lic = manager.getLicitatieById(1);
-
+        /*
         if (lic != nullptr) {
             // Luam pointeri la participanti existenti
             Participant* pTiriac = manager.getParticipantById(101);
@@ -95,6 +95,7 @@ int main() {
             // Aici se retrag banii din contul lui Tiriac
             lic->finalizeazaLicitatie();
         }
+        */
 
         // 7. TESTARE EXCEPTII (Blocuri try-catch interne pentru demo)
         cout << "\n>>> 5. TESTARE EXCEPTII <<<\n";
