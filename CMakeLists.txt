@@ -64,6 +64,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Derivate.cpp
         Derivate.h
         Exceptii.h
+        Microbuz.h
+        Microbuz.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
