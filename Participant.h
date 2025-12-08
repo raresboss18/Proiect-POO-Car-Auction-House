@@ -29,6 +29,8 @@ public:
 
     Participant& operator=(Participant other);
 
+    bool operator==(const Participant& other) const;
+
     friend std::ostream& operator<<(std::ostream& os, const Participant& participant);
 
     void topUp(double suma);

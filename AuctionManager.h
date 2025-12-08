@@ -6,6 +6,7 @@
 #define PROIECT_POO_AUCTIONMANAGER_H
 
 #include <vector>
+#include <list>
 #include <string>
 #include <memory>
 #include "Vehicul.h"
@@ -17,7 +18,7 @@ class AuctionManager {
 private:
     std::string numeCasaLicitatii;
     std::vector<std::unique_ptr<Vehicul>> inventarVehicule;
-    std::vector<Participant> listaParticipanti;
+    std::list<Participant> listaParticipanti;
     std::vector<Licitatie> listaLicitatii;
     int nextLicitatieId;
 

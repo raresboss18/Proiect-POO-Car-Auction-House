@@ -36,6 +36,8 @@ public:
     Vehicul(const Vehicul& other);
     Vehicul& operator=(const Vehicul& other);
 
+    bool operator==(const Vehicul& other) const;
+
     [[nodiscard]] virtual double calculPretRezerva() const = 0;
 
     [[nodiscard]] virtual Vehicul* clone() const = 0;

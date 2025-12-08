@@ -30,7 +30,7 @@ int main() {
         manager.inregistrareParticipant(Participant(103, "Firma Curierat", "logistica@fan.ro", 25000));
 
         // --- 1. ADAUGARE CU SMART POINTERS ---
-        cout << ">>> 1. ADAUGARE VEHICULE  <<<\n";
+        cout << ">>> 1. ADAUGARE VEHICULE (SMART POINTERS) <<<\n";
 
         // A. Autoturism
         manager.adaugaVehiculInParc(std::make_unique<Autoturism>(
@@ -47,7 +47,7 @@ int main() {
             "YAMA-R1-003", "Yamaha", "R1", 2022, 10000, 15000, specSport, dataCurenta, "Ca noua", SPORT
         ));
 
-        // D. Microbuz 
+        // D. Microbuz (TESTARE CLASA NOUA)
         manager.adaugaVehiculInParc(std::make_unique<Microbuz>(
             "MB-SPR-2020", "Mercedes", "Sprinter", 2020, 180000, 35000, specMicro, dataCurenta, "AC functional pasageri", 20));
 
@@ -62,41 +62,97 @@ int main() {
         manager.afiseazaAutoturism();
         manager.afiseazaMotocicleta();
         manager.afiseazaAutoutilitara();
+
+        // <--- AICI TESTAM FUNCTIA NOUA PENTRU MICROBUZ --->
         manager.afiseazaMicrobuz();
 
-        // --- 4. LICITATIE ---
-        cout << "\n>>> 4. SIMULARE LICITATIE <<<\n";
-        manager.creeazaLicitatie("BMW-X6-001", dataCurenta, 120, "Licitatie Premium SUV");
-        Licitatie* lic = manager.getLicitatieById(1);
+        // --- 4. LICITATII ---
+        cout << "\n>>> 4. SIMULARE LICITATII <<<\n";
+       // Pas 1: Obtinem participantii
+        Participant* pTiriac = manager.getParticipantById(101);
+        Participant* pStudent = manager.getParticipantById(102);
 
-        if (lic != nullptr) {
-            Participant* pTiriac = manager.getParticipantById(101);
-            Participant* pStudent = manager.getParticipantById(102);
+        // Validare Participanti
+        if (pTiriac != nullptr && pStudent != nullptr) {
+            cout << "[CHECK] Se verifica identitatea participantilor...\n";
+            if (*pTiriac == *pStudent) {
+                cout << "EROARE CRITICA: Participantii sunt aceeasi persoana!\n";
+                return 1;
+            } else {
+                cout << "-> VALID: Participantii sunt diferiti.\n";
+            }
+        }
 
-            cout << "--- Incepe Licitarea ---\n";
-            lic->inscrieParticipant(pTiriac);
-            lic->inscrieParticipant(pStudent);
+        // Pas 2: Creare Licitatii
+        cout << "\n--- Creare Licitatie #1 ---\n";
+        manager.creeazaLicitatie("BMW-X6-001", dataCurenta, 120, "Licitatie SUV Premium");
+
+        cout << "\n--- Creare Licitatie #2 ---\n";
+        manager.creeazaLicitatie("MB-SPR-2020", dataCurenta, 60, "Licitatie Transport Persoane");
+
+        // Pas 3: luam pointerii
+        Licitatie* lic1 = manager.getLicitatieById(1);
+        Licitatie* lic2 = manager.getLicitatieById(2);
+
+        // --- VALIDARE VEHICULE (Operator ==) ---
+        if (lic1 != nullptr && lic2 != nullptr) {
+            cout << "[CHECK] Se verifica unicitatea vehiculelor scoase la licitatie...\n";
+
+            const Vehicul* v1 = lic1->getVehicul();
+            const Vehicul* v2 = lic2->getVehicul();
+
+            if (v1 != nullptr && v2 != nullptr) {
+                if (*v1 == *v2) {
+                    cout << "ALERTA: Se incearca vanzarea aceluiasi vehicul (" << v1->getVIN() << ") in doua licitatii simultan!\n";
+                } else {
+                    cout << "-> VALID: Vehiculele sunt diferite (" << v1->getVIN() << " vs " << v2->getVIN() << ").\n";
+                }
+            }
+        }
+
+        // Pas 4: Desfasurare Licitatie #1 (BMW)
+        if (lic1 != nullptr) {
+            cout << "\n--- START Desfasurare Licitatie #1 (BMW) ---\n";
+            lic1->inscrieParticipant(pTiriac);
+            lic1->inscrieParticipant(pStudent);
 
             cout << "-> Studentul ofera 600 EUR...\n";
-            lic->plaseazaOferta(pStudent, 600);
-
-            cout << "-> Tiriac ofera 700 EUR...\n";
-            lic->plaseazaOferta(pTiriac, 700);
-
-            cout << "-> Studentul ofera 750 EUR...\n";
-            lic->plaseazaOferta(pStudent, 600);
+            lic1->plaseazaOferta(pStudent, 600);
 
             cout << "-> Tiriac ofera 35000 EUR...\n";
-            lic->plaseazaOferta(pTiriac, 35000);
+            lic1->plaseazaOferta(pTiriac, 35000);
 
-            if(lic->getCastigatorCurent() != nullptr) {
-                cout << " Castigatorul curent este " << lic->getCastigatorCurent()->getNume() << endl;
+            if(lic1->getCastigatorCurent() != nullptr) {
+                cout << " Castigatorul curent este " << lic1->getCastigatorCurent()->getNume() << endl;
             }
-            if(lic->getVehicul() != nullptr) {
-                cout << " Vehiculul licitat are VIN " << lic->getVehicul()->getVIN() << endl;
+            if(lic1->getVehicul() != nullptr) {
+                cout << " Vehiculul licitat are VIN " << lic1->getVehicul()->getVIN() << endl;
             }
 
-            lic->finalizeazaLicitatie();
+
+            lic1->finalizeazaLicitatie();
+        }
+
+        // Pas 5: Desfasurare Licitatie #2 (Microbuz)
+        if (lic2 != nullptr) {
+            cout << "\n--- START Desfasurare Licitatie #2 (Microbuz) ---\n";
+            Participant* pFirma = manager.getParticipantById(103);
+
+            lic2->inscrieParticipant(pFirma);
+            lic2->inscrieParticipant(pTiriac); // Tiriac participa si aici
+
+            cout << "-> Firma Curierat ofera 36000 EUR...\n";
+            lic2->plaseazaOferta(pFirma, 36000);
+
+            if(lic2->getCastigatorCurent() != nullptr) {
+                cout << " Castigatorul curent este " << lic2->getCastigatorCurent()->getNume() << endl;
+            }
+            if(lic2->getVehicul() != nullptr) {
+                cout << " Vehiculul licitat are VIN " << lic2->getVehicul()->getVIN() << endl;
+            }
+
+
+            lic2->finalizeazaLicitatie();
         }
 
         // --- 5. EXCEPTII ---
@@ -120,8 +176,8 @@ int main() {
         // TEST C: FonduriInsuficienteException (Participant)
         cout << "\n[TEST C] Retragere suma mai mare decat soldul...\n";
         try {
-            if (Participant* pStudent = manager.getParticipantById(102)) {
-                pStudent->retragere(5000); // Are doar 500
+            if (Participant* pStudent1 = manager.getParticipantById(102)) {
+                pStudent1->retragere(5000); // Are doar 500
             }
         } catch (const AuctionException& e) {
             cout << "--> EXCEPTIE PRINSA: " << e.what() << endl;
@@ -130,8 +186,8 @@ int main() {
         // TEST D: SumaInvalidaException (la topUp)
         cout << "\n[TEST D] Adaugare fonduri (topUp) cu suma negativa...\n";
         try {
-            if(Participant* pStudent = manager.getParticipantById(102)) {
-                pStudent->topUp(-100);
+            if(Participant* pStudent2 = manager.getParticipantById(102)) {
+                pStudent2->topUp(-100);
             }
         } catch (const AuctionException& e) {
             cout << "--> EXCEPTIE PRINSA: " << e.what() << endl;
@@ -140,8 +196,8 @@ int main() {
         // TEST E: SumaInvalidaException (la retragere) <--- SCENARIU NOU ADAUGAT
         cout << "\n[TEST E] Retragere fonduri cu suma negativa...\n";
         try {
-            if(Participant* pStudent = manager.getParticipantById(102)) {
-                pStudent->retragere(-50);
+            if(Participant* pStudent3 = manager.getParticipantById(102)) {
+                pStudent3->retragere(-50);
             }
         } catch (const AuctionException& e) {
             cout << "--> EXCEPTIE PRINSA: " << e.what() << endl;

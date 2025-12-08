@@ -69,6 +69,10 @@ ostream& operator<<(ostream& os, const Participant& participant) {
     return os;
 }
 
+bool Participant::operator==(const Participant& other) const {
+    return this->idParticipant == other.idParticipant;
+}
+
 void Participant::topUp(double suma) {
     if (suma <= 0) {
         throw SumaInvalidaException(suma);

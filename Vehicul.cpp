@@ -113,6 +113,10 @@ void Vehicul::afiseaza(std::ostream& os) const {
         os << "Observatii: " << observatiiTehnice << "\n\n\n";
 }
 
+bool Vehicul::operator==(const Vehicul& other) const {
+    return this->vin == other.vin;
+}
+
 ostream& operator<<(ostream& os, const Vehicul& vehicul) {
     vehicul.afiseaza(os);
     return os;
