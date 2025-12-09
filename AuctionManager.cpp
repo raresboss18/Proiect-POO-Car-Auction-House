@@ -11,10 +11,7 @@
 
 using namespace std;
 
-AuctionManager::AuctionManager(string numeCasaLicitatii) : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {
-    listaParticipanti.reserve(100);
-    listaLicitatii.reserve(100);
-}
+AuctionManager::AuctionManager(string numeCasaLicitatii) : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {}
 
 AuctionManager::~AuctionManager(){
     inventarVehicule.clear();
@@ -139,4 +136,5 @@ ostream& operator<<(ostream& os, const AuctionManager& manager) {
     os << "Vehicule in inventar: " << manager.inventarVehicule.size() << "\n";
     os << "Licitatii create: " << manager.listaLicitatii.size() << "\n";
     return os;
+
 }
