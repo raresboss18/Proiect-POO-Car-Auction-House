@@ -11,7 +11,21 @@
 
 using namespace std;
 
-AuctionManager::AuctionManager(string numeCasaLicitatii) : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {}
+// [SINGLETON] Initializare membru static
+AuctionManager* AuctionManager::instance = nullptr;
+
+// [SINGLETON] Implementare getInstance
+AuctionManager& AuctionManager::getInstance(const std::string& nume) {
+    if (instance == nullptr) {
+        instance = new AuctionManager(nume);
+    }
+    return *instance;
+}
+
+// Constructorul devine privat (aici a ramas implementarea, doar ca e apelata doar de getInstance)
+AuctionManager::AuctionManager(string numeCasaLicitatii)
+    : numeCasaLicitatii(std::move(numeCasaLicitatii)), nextLicitatieId(1) {}
+
 
 AuctionManager::~AuctionManager(){
     inventarVehicule.clear();
@@ -136,5 +150,12 @@ ostream& operator<<(ostream& os, const AuctionManager& manager) {
     os << "Vehicule in inventar: " << manager.inventarVehicule.size() << "\n";
     os << "Licitatii create: " << manager.listaLicitatii.size() << "\n";
     return os;
+}
 
+const std::vector<Participant>& AuctionManager::getListaParticipanti() const {
+    return listaParticipanti;
+}
+
+const std::vector<Licitatie>& AuctionManager::getListaLicitatii() const {
+    return listaLicitatii;
 }
